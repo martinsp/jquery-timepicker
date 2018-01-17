@@ -809,7 +809,8 @@
 
     if (
       target.closest(".ui-timepicker-input").length ||
-      target.closest(".ui-timepicker-wrapper").length
+      target.closest(".ui-timepicker-wrapper").length ||
+      target.closest('.ui-timepicker-trigger').length
     ) {
       // active timepicker was focused. ignore
       return;
