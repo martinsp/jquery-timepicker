@@ -83,7 +83,9 @@
     timeFormat: "g:ia",
     typeaheadHighlight: true,
     useSelect: false,
-    wrapHours: true
+    wrapHours: true,
+    wrapperHTML: null,
+    offsetBottom: 0
   };
 
   var methods = {
@@ -223,6 +225,7 @@
           self.offset().top +
           self.outerHeight() +
           parseInt(list.css("marginTop").replace("px", ""), 10);
+        listOffset.top += settings.offsetBottom;
       }
 
       list.offset(listOffset);
@@ -537,11 +540,24 @@
     } else {
       list = $("<ul />", { class: "ui-timepicker-list" });
 
-      var wrapped_list = $("<div />", {
-        class: "ui-timepicker-wrapper",
-        tabindex: -1
-      });
-      wrapped_list.css({ display: "none", position: "absolute" }).append(list);
+      if (settings.wrapperHTML && settings.wrapperHTML.length) {
+        var wrapped_list = $(settings.wrapperHTML);
+        wrapped_list.addClass("ui-timepicker-wrapper");
+        wrapped_list.attr("tabindex", -1);
+        wrapped_list.css({ display: "none", position: "absolute" })
+        var list_container = wrapped_list.find('[data-container="timepicker-list"]:first');
+        if (list_container.length) {
+          list_container.append(list);
+        } else {
+          wrapped_list.append(list);
+        }
+      } else {
+        var wrapped_list = $("<div />", {
+          class: "ui-timepicker-wrapper",
+          tabindex: -1
+        });
+        wrapped_list.css({ display: "none", position: "absolute" }).append(list);
+      }
     }
 
     if (settings.noneOption) {
