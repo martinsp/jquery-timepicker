@@ -723,7 +723,9 @@
         self.off("focus.timepicker");
         self.on("focus.timepicker-ie-hack", function() {
           self.off("focus.timepicker-ie-hack");
-          self.on("focus.timepicker", methods.show);
+          if (settings.showOn.indexOf('focus') != -1) {
+            self.on("focus.timepicker", methods.show);
+          }
         });
 
         if (!_hideKeyboard(self)) {
