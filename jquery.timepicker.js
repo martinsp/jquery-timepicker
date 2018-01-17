@@ -247,19 +247,34 @@
         selected = list.find("li:not(.ui-timepicker-disabled):first");
       }
 
+      var scrollList = list.find('[data-container="timepicker-list"]:first');
+      if (scrollList.length == 0) {
+        scrollList = list
+      }
+
       if (selected && selected.length) {
         var topOffset =
-          list.scrollTop() + selected.position().top - selected.outerHeight();
-        list.scrollTop(topOffset);
+          scrollList.scrollTop() + selected.position().top - selected.outerHeight();
+        scrollList.scrollTop(topOffset);
       } else {
-        list.scrollTop(0);
+        scrollList.scrollTop(0);
       }
 
       // prevent scroll propagation
       if (settings.stopScrollPropagation) {
         $(
           document
+        ).on("wheel.ui-timepicker", '.ui-timepicker-wrapper [data-container="timepicker-list"]', function(e){
+          e.preventDefault();
+          var currentScroll = $(this).scrollTop();
+          $(this).scrollTop(currentScroll + e.originalEvent.deltaY);
+        });
+        $(
+          document
         ).on("wheel.ui-timepicker", ".ui-timepicker-wrapper", function(e) {
+          if ($(this).find('[data-container="timepicker-list"]').length) {
+            return;
+          }
           e.preventDefault();
           var currentScroll = $(this).scrollTop();
           $(this).scrollTop(currentScroll + e.originalEvent.deltaY);
